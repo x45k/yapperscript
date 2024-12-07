@@ -4,7 +4,22 @@
 Yapperscript is a coding language based off of javascript, which allows you to use javascript, but with renamed functions for simplicity (for example, const turns into declaringAConstantThatCannotBeReassignedAfterInitialization).
 
 ## Why should I use yapperscript?
-Yappscript is specially designed to code quicker. Every renamed function is easy to remember, especially for beginners.
+Yapperscript is specially designed to code quicker. Every renamed function is easy to remember, especially for beginners.
+
+## How do I install and use yapperscript?
+To install yapperscript, follow the steps as follows:
+1. Ensure you have nodejs installed:
+```
+node --version
+```
+2. Add the interpreter to your directory:
+```bash
+curl -O https://raw.githubusercontent.com/x45k/yapperscript/refs/heads/main/interpreter.js
+```
+3. Run your yapperscript code:
+```bash
+node interpreter.js youryapperfile.yapper
+```
 
 ## But a function isn't long enough!
 If you come across a function that isn't long enough, or a function you use that isn't in yapperscript, feel free to open a pull request with the function renamed/added.
