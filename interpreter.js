@@ -27,6 +27,38 @@ const keywordsMap = {
   'definingAFunctionThatWillBeCalledImmediately': 'IIFE',
   'importingModulesOrFunctionsFromOtherFiles': 'import',
   'exportingFunctionsOrVariablesFromAFileForUseElsewhere': 'export',
+  'definingAnAsynchronousFunctionThatReturnsAPromise': 'async',
+  'usingAwaitToWaitForAPromiseToResolve': 'await',
+  'definingAGetterForAnObjectProperty': 'get',
+  'definingASetterForAnObjectProperty': 'set',
+  'bindingAnEventHandlerToAnElement': 'addEventListener',
+  'removingAnEventHandlerFromAnElement': 'removeEventListener',
+  'throwingAnErrorManually': 'throw',
+  'definingAFunctionThatExecutesImmediatelyAfterTheScriptIsLoaded': 'onload',
+  'checkingIfAnObjectIsAnArray': 'Array.isArray',
+  'definingARegularExpressionForPatternMatching': 'RegExp',
+  'callingAFunctionAfterThePageIsLoaded': 'window.onload',
+  'storingAValueInLocalStorage': 'localStorage.setItem',
+  'retrievingAValueFromLocalStorage': 'localStorage.getItem',
+  'removingAValueFromLocalStorage': 'localStorage.removeItem',
+  'definingAMethodForAnArrayToTransformItsElements': 'map',
+  'definingAMethodForAnArrayToFilterItsElements': 'filter',
+  'definingAMethodForAnArrayToReduceItsElements': 'reduce',
+  'definingAMethodForAnArrayToFindTheFirstMatch': 'find',
+  'definingAMethodForAnArrayToCheckAllConditions': 'every',
+  'definingAMethodForAnArrayToCheckAnyCondition': 'some',
+  'bindingAFunctionToBeCalledWhenTheMouseIsClicked': 'onclick',
+  'definingAClassThatExtendsAnotherClass': 'extends',
+  'definingAClassMethod': 'method',
+  'creatingANewSetDataStructure': 'new Set',
+  'creatingANewMapDataStructure': 'new Map',
+  'checkingIfAKeyExistsInAMap': 'has',
+  'iteratingOverEntriesInAMap': 'forEach',
+  'definingAPropertyInAClass': 'property',
+  'creatingADebuggerStatementThatPausesCodeExecution': 'debugger',
+  'destructuringAnArrayOrObjectToExtractValues': 'destructuring',
+  'bringingInAFileToAccessItsContentsOrFunctions': 'require',
+  'exportingAModuleForUseInAnotherFile': 'module.exports'
 };
 
 function convertYapperscriptToJS(yapperscript) {
@@ -35,6 +67,14 @@ function convertYapperscriptToJS(yapperscript) {
     yapperscript = yapperscript.replace(regex, js);
   }
   return yapperscript;
+}
+
+function convertJSToYapperscript(jsCode) {
+  for (const [yapper, js] of Object.entries(keywordsMap)) {
+    const regex = new RegExp(`\\b${js}\\b`, 'g');
+    jsCode = jsCode.replace(regex, yapper);
+  }
+  return jsCode;
 }
 
 function executeYapperscriptFile(filePath) {
@@ -49,25 +89,40 @@ function executeYapperscriptFile(filePath) {
 }
 
 function convertYapperscriptToJSFile(filePath) {
-  const yapperscriptCode = fs.readFileSync(filePath, 'utf-8');
+  // this is just for funnies
+  console.log('Please send 100 btc to me to use this function.')
+  /*const yapperscriptCode = fs.readFileSync(filePath, 'utf-8');
   const jsCode = convertYapperscriptToJS(yapperscriptCode);
 
   const jsFilePath = path.basename(filePath, '.yapper') + '.js';
 
   fs.writeFileSync(jsFilePath, jsCode, 'utf-8');
-  console.log(`Converted JavaScript has been written to ${jsFilePath}`);
+  console.log(`Converted JavaScript has been written to ${jsFilePath}`);*/
+}
+
+function convertJSToYapperscriptFile(filePath) {
+  const jsCode = fs.readFileSync(filePath, 'utf-8');
+  const yapperscriptCode = convertJSToYapperscript(jsCode);
+
+  const yapperFilePath = path.basename(filePath, '.js') + '.yapper';
+
+  fs.writeFileSync(yapperFilePath, yapperscriptCode, 'utf-8');
+  console.log(`Converted Yapperscript has been written to ${yapperFilePath}`);
 }
 
 const args = process.argv.slice(2);
-const filePath = args.find(arg => arg.endsWith('.yapper'));
-const convertFlag = args.includes('--converttojs');
+const filePath = args.find(arg => arg.endsWith('.yapper') || arg.endsWith('.js'));
+const convertToJSFlag = args.includes('--converttojs');
+const convertToYapperFlag = args.includes('--converttoyapper');
 
 if (filePath && path.extname(filePath) === '.yapper') {
-  if (convertFlag) {
+  if (convertToJSFlag) {
     convertYapperscriptToJSFile(filePath);
   } else {
     executeYapperscriptFile(filePath);
   }
+} else if (convertToYapperFlag && filePath && path.extname(filePath) === '.js') {
+  convertJSToYapperscriptFile(filePath);
 } else {
-  console.log('Please provide a valid .yapper file');
+  console.log('Please provide a valid .yapper or .js file with the correct flag.');
 }
